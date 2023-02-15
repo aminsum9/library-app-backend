@@ -1,7 +1,7 @@
 <?php
 
 include("../controllers/userController.php");
-// include("../controllers/bukuController.php");
+include("../controllers/bukuController.php");
 
 $db_conn = new Database();
 
@@ -40,24 +40,24 @@ if($method == 'POST'){
     }
 }
 
-// if($method == 'POST'){
-//     $usbooker =  new bukuController($db_conn);
+if($method == 'POST'){
+    $usbooker =  new bukuController($db_conn);
 
-//     if ($path == '/book/create') {
-//         $book->create(trim($data->nomor_buku),trim($data->nama_buku),trim($data->penerbit),trim($data->penulis),trim($data->tanggal_masuk));
-//     }
+    if ($path == '/book/create') {
+        $book->create($data->nomor_buku,$data->nama_buku,$data->penerbit,$data->penulis,$data->tanggal_masuk);
+    }
 
-//     if ($path == '/book/books') {
-//         $book->get_buku();
-//     }
+    if ($path == '/book/books') {
+        $book->get_buku();
+    }
     
-//     if ($path == '/book/update') {
-//         $book->update_buku(trim($data->id),trim($data->nama),trim($data->nomor_telepon));
-//     }
+    if ($path == '/book/update') {
+        $book->update($data->id,$data->nomor_buku,$data->nama_buku,$data->penerbit,$data->penulis,$data->tanggal_masuk);
+    }
     
-//     if ($path == '/book/delete') {
-//         $book->delete(trim($data->id));
-//     }
-// }
+    if ($path == '/book/delete') {
+        $book->delete($data->id);
+    }
+}
 
 

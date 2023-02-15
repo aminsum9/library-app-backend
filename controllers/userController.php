@@ -30,9 +30,9 @@ class userController
         $addUser = mysqli_query($this->db_conn, "INSERT INTO `perpustakaan_botika`.user(id,nama,nomor_telepon,token_user) VALUES(0,'$name','$nomor_telepon','$token_user')");
 
         if ($addUser) {
-            echo json_encode(["success" => true, 'success register']);
+            echo json_encode(["success" => true, "message" => 'success register']);
         } else {
-            echo json_encode(["success" => false, 'failed register']);
+            echo json_encode(["success" => false, "message" => 'failed register']);
         }
     }
 
@@ -49,34 +49,40 @@ class userController
         }
     }
 
-    public function update_user($id, $name, $nomor_telepon)
+    public function update($id, $name, $nomor_telepon)
     {
 
-        if (isset($id) && isset($name) && isset($email) && isset($phone)) {
-            $updateUser = mysqli_query($this->db_conn, "UPDATE user SET name = '$name' , email = '$nomor_telepon' WHERE id = $id");
+        $name = mysqli_real_escape_string($this->db_conn, trim($name));
+        $nomor_telepon = mysqli_real_escape_string($this->db_conn, trim($nomor_telepon));
+
+        if (isset($id) && isset($name) && isset($nomor_telepon)) {
+            $updateUser = mysqli_query($this->db_conn, "UPDATE user SET nama = '$name' , nomor_telepon = '$nomor_telepon' WHERE id = $id");
 
             if ($updateUser) {
-                echo json_encode(["success" => 1, "user $name updated successfully"]);
+                echo json_encode(["success" => true, "user $name updated successfully"]);
             } else {
-                echo json_encode(["success" => 0, "user $name failed updated!"]);
+                echo json_encode(["success" => false, "user $name failed updated!"]);
             }
         } else {
-            echo  json_encode(["success" => 0, "please fill all required data!"]);
+            echo  json_encode(["success" => false, "please fill all required data!"]);
         }
     }
 
     public function delete($id)
     {   
         if(isset($id)){
-            $deleteUser = mysqli_query($this->db_conn, "DELETE FROM user WHERE id = $id");
+
+            $id = strval($id);
+
+            $deleteUser = mysqli_query($this->db_conn, "DELETE FROM user WHERE id =".$id);
         
             if($deleteUser){
-                echo json_encode(["success" => 1, "User success deleted!"]);
+                echo json_encode(["success" => true, "message" => "User success deleted!"]);
             } else {
-                echo  json_encode(["success" => 0, "User failed deleted!"]);
+                echo  json_encode(["success" => false, "message" => "User failed deleted!"]);
             }
         } else {
-            echo json_encode(["success" => 0, "Please fill all required data!"]);
+            echo json_encode(["success" => false, "message" => "Please fill all required data!"]);
         }
     }
 }

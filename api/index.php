@@ -1,5 +1,6 @@
 <?php
 
+include("../config/db.php");
 include("../controllers/userController.php");
 include("../controllers/bukuController.php");
 
@@ -41,7 +42,7 @@ if($method == 'POST'){
 }
 
 if($method == 'POST'){
-    $usbooker =  new bukuController($db_conn);
+    $book =  new bukuController($db_conn);
 
     if ($path == '/book/create') {
         $book->create($data->nomor_buku,$data->nama_buku,$data->penerbit,$data->penulis,$data->tanggal_masuk);

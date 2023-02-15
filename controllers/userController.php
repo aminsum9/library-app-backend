@@ -1,5 +1,4 @@
 <?php
-include("../config/db.php");
 
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json; charset=UTF-8");
@@ -10,7 +9,7 @@ class userController
 
     protected $db_conn;
 
-    function __construct(Database $db_conn)
+    function __construct($db_conn)
     {
         $this->db_conn = $db_conn->db();
     }

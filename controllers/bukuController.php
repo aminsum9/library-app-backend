@@ -1,5 +1,4 @@
 <?php
-include("../config/db.php");
 
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json; charset=UTF-8");
@@ -11,7 +10,7 @@ class bukuController
 
     protected $db_conn;
 
-    function __construct(Database $db_conn)
+    function __construct($db_conn)
     {
         $this->db_conn = $db_conn->db();
     }
@@ -23,14 +22,17 @@ class bukuController
         $nama_buku = mysqli_real_escape_string($this->db_conn, trim($nama_buku));
         $penerbit = mysqli_real_escape_string($this->db_conn, trim($penerbit));
         $penulis = mysqli_real_escape_string($this->db_conn, trim($penulis));
-        $tanggal_masuk = mysqli_real_escape_string($this->db_conn, trim($tanggal_masuk));
 
-        $addUser = mysqli_query($this->db_conn, "INSERT INTO `perpustakaan_botika`.buku(id,nomor_buku,nama_buku,penerbit,penulis,tanggal_masuk) VALUES(0,'$nomor_buku','$nama_buku','$penerbit'.'$penulis','tanggal_masuk')");
+        if($tanggal_masuk == ""){
+            $tanggal_masuk = date("Y-m-d H:i:s");
+        }
 
-        if ($addUser) {
-            echo json_encode(["success" => true, "message" => 'success register']);
+        $addBook = mysqli_query($this->db_conn, "INSERT INTO `perpustakaan_botika`.buku(id,nomor_buku,nama_buku,penerbit,penulis,tanggal_masuk) VALUES(0,'$nomor_buku','$nama_buku','$penerbit','$penulis','$tanggal_masuk')");
+
+        if ($addBook) {
+            echo json_encode(["success" => true, "message" => 'success add data book']);
         } else {
-            echo json_encode(["success" => false, "message" => 'failed register']);
+            echo json_encode(["success" => false, "message" => 'failed add data book']);
         }
 
     }
@@ -38,12 +40,12 @@ class bukuController
     function get_buku()
     {
 
-        $all_user = mysqli_query($this->db_conn, 'SELECT * FROM buku');
+        $all_books = mysqli_query($this->db_conn, 'SELECT * FROM buku');
 
-        if (mysqli_num_rows($all_user) > 0) {
-            $allUsers = mysqli_fetch_all($all_user, MYSQLI_ASSOC);
+        if (mysqli_num_rows($all_books) > 0) {
+            $allBooks = mysqli_fetch_all($all_books, MYSQLI_ASSOC);
 
-            echo json_encode(['success' => false, 'users' => $allUsers]);
+            echo json_encode(['success' => false, 'books' => $allBooks]);
         } else {
             echo json_encode(['success' => false, "message" => "failed get data buku"]);
         }
@@ -55,18 +57,20 @@ class bukuController
 
         if (isset($id) && isset($nomor_buku) && isset($nama_buku) && isset($penerbit) && isset($penulis)  && isset($tanggal_masuk)) {
 
-            $updateUser = mysqli_query($this->db_conn, "
-            UPDATE user SET nomor_buku = '$nomor_buku', 
-            nama_buku = '$nama_buku', 
-            penerbit = '$penerbit' 
-            penulis = '$penulis' 
-            tanggal_masuk = '$tanggal_masuk'
-            WHERE id = $id");
+            // $tanggal_masuk = date("Y-m-d H:i:s");
 
-            if ($updateUser) {
-                echo json_encode(["success" => true, "buku $nama_buku updated successfully"]);
+            $updateBooks = mysqli_query($this->db_conn, "
+            UPDATE buku SET nomor_buku = '$nomor_buku', 
+            nama_buku = '$nama_buku', 
+            penerbit = '$penerbit',
+            penulis = '$penulis',
+            tanggal_masuk = '$tanggal_masuk'
+            WHERE id = ".$id);
+            
+            if ($updateBooks) {
+                echo json_encode(["success" => true, "message" => "buku $nama_buku updated successfully"]);
             } else {
-                echo json_encode(["success" => false, "buku $nama_buku failed updated!"]);
+                echo json_encode(["success" => false, "message" => "buku $nama_buku failed updated!"]);
             }
             
         } else {
@@ -79,12 +83,12 @@ class bukuController
     {
         
         if(isset($id)){
-            $deleteUser = mysqli_query($this->db_conn, "DELETE FROM buku WHERE id =".$id);
+            $deleteBook = mysqli_query($this->db_conn, "DELETE FROM buku WHERE id =".$id);
         
-            if($deleteUser){
-                echo json_encode(["success" => true, "User success deleted!"]);
+            if($deleteBook){
+                echo json_encode(["success" => true, "Buku success deleted!"]);
             } else {
-                echo  json_encode(["success" => false, "User failed deleted!"]);
+                echo  json_encode(["success" => false, "Buku failed deleted!"]);
             }
         } else {
             echo json_encode(["success" => false, "Please fill all required data!"]);

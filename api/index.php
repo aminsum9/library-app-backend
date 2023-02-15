@@ -28,15 +28,15 @@ if($method == 'POST'){
     }
 
     if ($path == '/user/create') {
-        $user->create(trim($data->nama),trim($data->nomor_telepon));
+        $user->create($data->nama,$data->nomor_telepon);
     }
     
     if ($path == '/user/update') {
-        $user->update_user(trim($data->id),trim($data->nama),trim($data->nomor_telepon));
+        $user->update($data->id,$data->nama,$data->nomor_telepon);
     }
     
     if ($path == '/user/delete') {
-        $user->delete(trim($data->id));
+        $user->delete($data->id);
     }
 }
 
